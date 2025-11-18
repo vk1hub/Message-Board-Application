@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'profile_page.dart';
+import 'settings_page.dart';
+import 'chat_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -97,6 +99,13 @@ class HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.settings, color: Colors.blue),
               title: Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
+              },
             ),
           ],
         ),
