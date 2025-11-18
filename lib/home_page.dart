@@ -1,6 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  
+  String userName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserName();
+  }
+
+  void loadUserName() async {
+    User? user = auth.currentUser;
+    if (user != null) {
+      DocumentSnapshot userDoc = await firestore.collection('users').doc(user.uid).get();
+      if (userDoc.exists) {
+        setState(() {
+          userName = '${userDoc['firstName']} ${userDoc['lastName']}';
+        });
+      }
+    }
+  }
+
   final List<Map<String, dynamic>> messageBoards = [
     {
       'name': 'General Discussion',
@@ -39,6 +69,60 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Message Boards'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(
+                    Icons.account_circle,
+                    size: 60,
+                    color: Colors.white,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    userName.isNotEmpty ? userName : 'User',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    auth.currentUser?.email ?? '',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.message, color: Colors.blue),
+              title: Text('Message Boards'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.person, color: Colors.blue),
+              title: Text('Profile'),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings, color: Colors.blue),
+              title: Text('Settings'),
+            ),
+          ],
+        ),
       ),
       body: ListView.builder(
         itemCount: messageBoards.length,
