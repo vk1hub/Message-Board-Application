@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -45,22 +46,22 @@ class _HomePageState extends State<HomePage> {
     {
       'name': 'Sports',
       'icon': Icons.sports_basketball,
-      'color': Colors.orange,
+      'color': Colors.blue,
     },
     {
       'name': 'Music',
       'icon': Icons.headphones_rounded,
-      'color': Colors.purple,
+      'color': Colors.blue,
     },
     {
       'name': 'Movies',
       'icon': Icons.movie,
-      'color': Colors.red,
+      'color': Colors.blue,
     },
     {
       'name': 'Gaming',
       'icon': Icons.games,
-      'color': Colors.teal,
+      'color': Colors.blue,
     },
   ];
 
@@ -116,6 +117,13 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.person, color: Colors.blue),
               title: Text('Profile'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(Icons.settings, color: Colors.blue),
