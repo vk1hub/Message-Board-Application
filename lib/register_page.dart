@@ -14,6 +14,7 @@ class RegisterPageState extends State<RegisterPage> {
   final passwordController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
+  final roleController = TextEditingController();
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -38,7 +39,12 @@ class RegisterPageState extends State<RegisterPage> {
           'firstName': firstNameController.text,
           'lastName': lastNameController.text,
           'email': emailController.text,
+          'role': roleController.text,
           'registrationDateTime': DateTime.now(),
+        });
+
+        setState(() {
+          loadingCircle = false;
         });
 
         ScaffoldMessenger.of(
@@ -50,21 +56,21 @@ class RegisterPageState extends State<RegisterPage> {
           MaterialPageRoute(builder: (context) => LoginPage()),
         );
       } catch (e) {
+        setState(() {
+          loadingCircle = false;
+        });
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration failed: ${e.toString()}')),
         );
       }
-
-      setState(() {
-        loadingCircle = false;
-      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Register')),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -99,6 +105,21 @@ class RegisterPageState extends State<RegisterPage> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your last name';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 15),
+              TextFormField(
+                controller: roleController,
+                decoration: InputDecoration(
+                  labelText: 'Role (ex: Student, Teacher)',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.work),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your role';
                   }
                   return null;
                 },
