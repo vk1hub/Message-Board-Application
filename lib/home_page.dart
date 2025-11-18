@@ -5,13 +5,13 @@ import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  
+
   String userName = '';
 
   @override
@@ -23,7 +23,10 @@ class _HomePageState extends State<HomePage> {
   void loadUserName() async {
     User? user = auth.currentUser;
     if (user != null) {
-      DocumentSnapshot userDoc = await firestore.collection('users').doc(user.uid).get();
+      DocumentSnapshot userDoc = await firestore
+          .collection('users')
+          .doc(user.uid)
+          .get();
       if (userDoc.exists) {
         setState(() {
           userName = '${userDoc['firstName']} ${userDoc['lastName']}';
@@ -33,61 +36,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   final List<Map<String, dynamic>> messageBoards = [
-    {
-      'name': 'General Discussion',
-      'icon': Icons.chat,
-      'color': Colors.blue,
-    },
-    {
-      'name': 'Technology',
-      'icon': Icons.computer,
-      'color': Colors.blue,
-    },
-    {
-      'name': 'Sports',
-      'icon': Icons.sports_basketball,
-      'color': Colors.blue,
-    },
-    {
-      'name': 'Music',
-      'icon': Icons.headphones_rounded,
-      'color': Colors.blue,
-    },
-    {
-      'name': 'Movies',
-      'icon': Icons.movie,
-      'color': Colors.blue,
-    },
-    {
-      'name': 'Gaming',
-      'icon': Icons.games,
-      'color': Colors.blue,
-    },
+    {'name': 'General Discussion', 'icon': Icons.chat, 'color': Colors.blue},
+    {'name': 'Technology', 'icon': Icons.computer, 'color': Colors.blue},
+    {'name': 'Sports', 'icon': Icons.sports_basketball, 'color': Colors.blue},
+    {'name': 'Music', 'icon': Icons.headphones_rounded, 'color': Colors.blue},
+    {'name': 'Movies', 'icon': Icons.movie, 'color': Colors.blue},
+    {'name': 'Gaming', 'icon': Icons.games, 'color': Colors.blue},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Message Boards'),
-      ),
+      appBar: AppBar(title: Text('Message Boards')),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
+              decoration: BoxDecoration(color: Colors.blue),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Icon(
-                    Icons.account_circle,
-                    size: 60,
-                    color: Colors.white,
-                  ),
+                  Icon(Icons.account_circle, size: 60, color: Colors.white),
                   SizedBox(height: 10),
                   Text(
                     userName.isNotEmpty ? userName : 'User',
@@ -99,10 +70,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Text(
                     auth.currentUser?.email ?? '',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                    ),
+                    style: TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                 ],
               ),
@@ -117,12 +85,13 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               leading: Icon(Icons.person, color: Colors.blue),
               title: Text('Profile'),
-              onTap: () {
+              onTap: () async {
                 Navigator.pop(context);
-                Navigator.push(
+                await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ProfilePage()),
                 );
+                loadUserName();
               },
             ),
             ListTile(
@@ -140,16 +109,11 @@ class _HomePageState extends State<HomePage> {
             child: ListTile(
               leading: CircleAvatar(
                 backgroundColor: messageBoards[index]['color'],
-                child: Icon(
-                  messageBoards[index]['icon'],
-                  color: Colors.white,
-                ),
+                child: Icon(messageBoards[index]['icon'], color: Colors.white),
               ),
               title: Text(
                 messageBoards[index]['name'],
-                style: TextStyle(
-                  fontSize: 20,
-                ),
+                style: TextStyle(fontSize: 20),
               ),
               trailing: Icon(Icons.arrow_forward, size: 16),
             ),
