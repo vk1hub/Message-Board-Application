@@ -77,6 +77,7 @@ class HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            // HAMBURGER LIST ITEMS
             ListTile(
               leading: Icon(Icons.message, color: Colors.blue),
               title: Text('Message Boards'),
@@ -125,6 +126,16 @@ class HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 20),
               ),
               trailing: Icon(Icons.arrow_forward, size: 16),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChatPage(
+                      chatRoom: messageBoards[index]['name'],
+                    ),
+                  ),
+                );
+              },
             ),
           );
         },
